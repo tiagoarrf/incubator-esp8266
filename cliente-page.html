@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Incubator Root</title>
+    <style>
+      /* Estilos CSS */
+      body {
+        font-family: Arial, sans-serif;
+      }
+      h1 {
+        font-size: 1.5rem;
+      }
+      p {
+        font-size: 1rem;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Dados do Sensor</h1>
+    <div id="dados"></div>
+
+    <script>
+      // Função para atualizar os dados do sensor
+      function atualizarDados() {
+        fetch('http://192.168.1.3/api')
+          .then(function(response) {
+            // Verificar se a resposta da requisição foi bem sucedida
+            if (response.ok) {
+              // Converter a resposta em formato JSON
+              return response.json();
+            }
+            // Se a resposta não foi bem sucedida, lançar um erro
+            throw new Error('Erro na resposta da requisição.');
+          })
+          .then(function(data) {
+            // Criar uma string HTML com os dados obtidos da API
+            let html = '';
+            Object.keys(data).forEach(function(key) {
+              html += '<p>' + key + ': ' + data[key] + '</p>';
+            });
+            // Atualizar o elemento HTML com a string HTML gerada
+            document.getElementById('dados').innerHTML = html;
+          })
+          .catch(function(error) {
+            // Se ocorrer um erro na requisição, exibir uma mensagem de erro
+            console.error('Erro na requisição:', error);
+          });
+      }
+
+      // Chamar a função atualizarDados() imediatamente e a cada 5 segundos
+      atualizarDados();
+      setInterval(atualizarDados, 5000);
+    </script>
+  </body>
+</html>
